@@ -1,0 +1,64 @@
+<h1>Cadastrar tarefa</h1>
+
+<div class="well">
+  <!-- 
+    usar o # antes de formTarefa disponibiliza uma variável local para o angular na view 
+    essa variavel será uma representação do formulario, por isso é possivel utilizar como 
+    esta na linha 48
+  -->
+  <form #formTarefa="ngForm">
+    <div class="form-group">
+      <label for="nome">Tarefa:</label>
+      <!-- 
+        [()] -> binding duplo, que significa que o Angular vai manter em perfeito sincronismo
+        o valor tarefa.nome tanto no componente quanto na view. Isso vai garantir que o tarefa.nome
+        vai possuir o valor digitado na tela
+      -->
+      <input 
+        type="text"
+        class="form-control"
+        id="nome"
+        name="nome"        
+        [(ngModel)]="tarefa.nome"
+        #nome="ngModel"
+        minlength="5" 
+        required> 
+        <!-- 
+          ao criar uma referência do ngModel (linha 23) o angular automaticamente adiciona um 
+          array chamado errors que diz todos os erros que tem na aplicação. Esses erros sao baseados
+          nos nomes das validações minlength e required (linhas 24 e 25)
+        -->
+
+        <!-- 
+          tratamento de erro
+          linha 37 -> exiba a mensagem de erro se possuir um erro e se o nome ja foi modificado,
+          ou seja, apenas quando houver alguma interação do usuario. Essa interação é monitorada
+          atraves do nome.dirty e nome.touched
+         -->
+      <div 
+        *ngIf="nome.errors && (nome.dirty || nome.touched)" 
+        class="alert alert-danger">
+        <div [hidden]="!nome.errors.required">
+          Digite a tarefa.
+        </div>
+        <div [hidden]="!nome.errors.minlength">
+          A tarefa deve conter ao menos 5 caracteres.
+        </div>
+      </div>
+    </div>
+    <div class="form-group text-center">
+      <input 
+        type="submit"
+        class="btn btn-success"
+        (click)="cadastrar()"
+        value="Cadastrar"
+        [disabled]="!formTarefa.form.valid"> <!-- botao desabilitado até q o form seja valido -->
+      <a 
+        [routerLink]="['/tarefas']"
+        class="btn btn-default">
+        <span class="glyphicon glyphicon-chevron-left" 
+          aria-hidden="true"></span> Voltar
+      </a>
+    </div>
+  </form>
+</div>
